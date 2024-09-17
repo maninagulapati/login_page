@@ -20,11 +20,24 @@ class MyApp extends StatelessWidget {
           length: 2,
           child: Scaffold(
             appBar: AppBar(
-              title: const Text('Login & Signup'),
-              bottom: const TabBar(tabs: [
-                Tab(text: 'Login'),
-                Tab(text: 'Signup'),
-              ]),
+             title: Center(
+            child: Container(
+              width: 150,  // Set your desired width
+              child: Text('Login & Signup'),
+            ),
+          ),
+              bottom: PreferredSize(
+                preferredSize:  Size.fromHeight(50),
+                 child: Center(
+                  child: Container(
+                    width: 450,
+                    child: TabBar(tabs: const[
+                      Tab(text: 'Login'),
+                      Tab(text: "Signp",)
+                    ]),
+                  ),
+                 )
+                 )
             ),
             body: TabBarView(
               children: [
@@ -102,69 +115,74 @@ class _LoginCardState extends State<LoginCard> {
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 80,
-      child: Card(
-        margin: EdgeInsets.all(16.0),
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Text(
-                'Login',
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 16.0),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(labelText: 'Email'),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 8.0),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(labelText: 'Password'),
-                      obscureText: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16.0),
-                    if (_isLoading)
-                      Center(child: CircularProgressIndicator())
-                    else
-                      ElevatedButton(
-                        onPressed: _login,
-                        child: Text('Login'),
-                      ),
-                    if (_errorMessage.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0),
-                        child: Text(
-                          _errorMessage,
-                          style: TextStyle(color: Colors.red),
-                          textAlign: TextAlign.center,
+    return PreferredSize(
+      preferredSize: Size.fromHeight(100),
+      child: Center(
+        child: Container(
+          width: 450,
+          child: Card(
+            margin: EdgeInsets.all(16.0),
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Login',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 16.0),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(labelText: 'Email'),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                  ],
-                ),
+                        SizedBox(height: 8.0),
+                        TextFormField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(labelText: 'Password'),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16.0),
+                        if (_isLoading)
+                          Center(child: CircularProgressIndicator())
+                        else
+                          ElevatedButton(
+                            onPressed: _login,
+                            child: Text('Login'),
+                          ),
+                        if (_errorMessage.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Text(
+                              _errorMessage,
+                              style: TextStyle(color: Colors.red),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -233,76 +251,79 @@ class _SignupCardState extends State<SignupCard> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 100,
-      height: 100,
-      child: Card(
-        elevation: 5,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'First Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your first name';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _firstname = value;
-                  },
+    return PreferredSize(
+      preferredSize: Size.fromHeight(0),
+      child: Center(
+        child: Container(
+          width: 450,
+          child: Card(
+            margin: EdgeInsets.all(16.0),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'First Name'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your first name';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _firstname = value;
+                      },
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'Last Name'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your last name';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _lastname = value;
+                      },
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'Email'),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _email = value;
+                      },
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'Password'),
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _password = value;
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    _isLoading
+                        ? CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: _signup,
+                            child: Text('Sign Up'),
+                          ),
+                  ],
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Last Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your last name';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _lastname = value;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Email'),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _email = value;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _password = value;
-                  },
-                ),
-                SizedBox(height: 20),
-                _isLoading
-                    ? CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: _signup,
-                        child: Text('Sign Up'),
-                      ),
-              ],
+              ),
             ),
           ),
         ),
