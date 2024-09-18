@@ -17,10 +17,10 @@ final products=[
   },
   {
     'id': '2',
-    'title': 'Bata Women\'s Shoes',
+    'title': 'Reebok men\'s Shoes',
     'price': 28.95,
     'imageUrl': 'assets/images/shoes_3.png',
-    'company': 'Bata',
+    'company': 'Reebok',
     'sizes': [8, 9, 10],
   },
   {
