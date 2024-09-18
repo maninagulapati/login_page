@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:login_page/home.dart';
+import 'package:login_page/pages/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginCard extends StatefulWidget {
@@ -46,7 +46,7 @@ class _LoginCardState extends State<LoginCard> {
         await prefs.setString('token', responseBody['token']);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeCard()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
 
         ScaffoldMessenger.of(context)
