@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_page/LoginCard.dart';
 import 'package:login_page/Signup.dart';
+import 'package:login_page/pages/homepage.dart';
 import 'package:login_page/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context)=>CartProvider())
       ],
       child: MaterialApp(
+        routes: {
+          'home': (context) => HomePage(),
+        },
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
           fontFamily: 'Lato',

@@ -44,11 +44,11 @@ class _LoginCardState extends State<LoginCard> {
       if (response.statusCode == 200) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', responseBody['token']);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-
+        Navigator.pushNamed(context, 'home');
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => HomePage()),
+        // );
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(responseBody['message'])));
       } else {
