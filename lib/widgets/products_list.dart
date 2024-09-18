@@ -12,13 +12,21 @@ class ProductList extends StatefulWidget {
 
 class _ProductListState extends State<ProductList> {
 
-  final List<String> filters=const ['All','Adidas','Nike','Reebook'];
+  final List<String> filters=const ['All','Addidas','Nike','Reebok'];
   late String selectedFilter=filters[0];
 
   @override
   void initState() {
     super.initState();
     selectedFilter=filters[0];
+  }
+
+  List<Map<String,Object>> getFilteredProducts() {
+    if(selectedFilter=='All'){
+      return products;
+    }
+    return products.where((product) =>
+     product['company'] == selectedFilter).toList();
   }
 
   @override
@@ -29,6 +37,8 @@ class _ProductListState extends State<ProductList> {
         color: Color.fromRGBO(225, 225, 225, 1),
       ),
     );
+
+    final filteredProducts=getFilteredProducts();
     
     return  SafeArea(
       child: Column(
@@ -98,13 +108,13 @@ class _ProductListState extends State<ProductList> {
               builder: (context,constraints){
                 if(constraints.maxWidth>1080){
                   return GridView.builder(
-              itemCount: products.length,
+              itemCount: filteredProducts.length,
               gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 1.75,
                 ),
               itemBuilder: (context,index){
-                final product = products[index];
+                final product = filteredProducts[index];
                 return GestureDetector(
                       onTap: (){
                         Navigator.of(context).push(
@@ -127,9 +137,9 @@ class _ProductListState extends State<ProductList> {
                 }
                 else{
                   return ListView.builder(
-                itemCount: products.length,
+                itemCount: filteredProducts.length,
                 itemBuilder: (context,index){
-                    final product = products[index];
+                    final product = filteredProducts[index];
                     return GestureDetector(
                       onTap: (){
                         Navigator.of(context).push(
