@@ -1,31 +1,10 @@
 import 'package:flutter/material.dart';
 
-// class HomeCard extends StatelessWidget {
-//   const HomeCard({super.key});
-//   @override
-//   Widget build(BuildContext context) {
-//     return  const SizedBox(
-//       height: 80,
-//       width: 80,
-//       child: Center(
-//         child: Text(
-//           "Home Page",
-//           style: TextStyle(
-//             color: Colors.black,
-//           ),
-//           ),
-//       ),
-//     );
-//   }
-  
-// }
-
 class HomeCard extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
    return _HomeCard();
   }
-  
 }
 
 class _HomeCard extends State<HomeCard>{

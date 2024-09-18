@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:login_page/AirflyCard.dart';
 import 'package:login_page/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,7 +47,7 @@ class _LoginCardState extends State<LoginCard> {
         await prefs.setString('token', responseBody['token']);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeCard()),
+          MaterialPageRoute(builder: (context) => AirbnbClone()),
         );
 
         ScaffoldMessenger.of(context)
