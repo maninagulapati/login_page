@@ -25,13 +25,13 @@ class _SignupCardState extends State<SignupCard> {
 
       try {
         final response = await http.post(
-          Uri.parse('http://localhost:3000/api/registration'),
+          Uri.parse('http://localhost:3000/api/users/signup'),
           headers: {
             'Content-Type': 'application/json',
           },
           body: jsonEncode({
-            'firstname': _firstname,
-            'lastname': _lastname,
+            'username': _firstname,
+            // 'lastname': _lastname,
             'email': _email,
             'password': _password,
           }),
