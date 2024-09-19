@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
@@ -29,11 +31,14 @@ class ProductCard extends StatelessWidget {
           const SizedBox(height: 5),
           Text('\$$price',style: Theme.of(context).textTheme.bodySmall,),
           const SizedBox(height: 5),
-          Center(child: Image.asset(image,height: 175)),
-          // Image(
-          //   height: 175,
-          //   image: AssetImage(image),
-          //   )
+          Center(
+          child: Image.memory(
+            base64Decode(image), // Decode the base64 string
+            height: 175,
+            fit: BoxFit.cover, // Optional: to ensure the image fits well
+          ),
+        ),
+         
         ],
       ),
     );

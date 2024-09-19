@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:login_page/LoginCard.dart';
-import 'package:login_page/Signup.dart';
+import 'package:login_page/pages/add_product.dart';
+import 'package:login_page/widgets/LoginCard.dart';
+import 'package:login_page/widgets/Signup.dart';
 import 'package:login_page/pages/homepage.dart';
 import 'package:login_page/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         routes: {
           'home': (context) => HomePage(),
+          'addproduct':(context)=> AddProductPage(),
         },
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
@@ -69,7 +71,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
                 bottom: PreferredSize(
-                  preferredSize:  Size.fromHeight(50),
+                  preferredSize: const Size.fromHeight(50),
                    child: Center(
                     child: Container(
                       width: 450,
