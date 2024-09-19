@@ -47,7 +47,7 @@ class _LoginCardState extends State<LoginCard> {
       if (response.statusCode == 200) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', responseBody['token']);
-        await storage.write(key: 'token', value: responseBody['token']);
+        // await storage.write(key: 'token', value: responseBody['token']);
         Navigator.pushNamed(context, 'home');
         // Navigator.push(
         //   context,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:login_page/Signup.dart';
 import 'package:login_page/pages/add_product.dart';
 import 'package:login_page/widgets/LoginCard.dart';
-import 'package:login_page/widgets/Signup.dart';
 import 'package:login_page/pages/homepage.dart';
 import 'package:login_page/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
