@@ -69,6 +69,11 @@ class _ProductListState extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
+     final isMobile=screenWidth<650;
+
+    
+
     const border = OutlineInputBorder(
       borderRadius: BorderRadius.horizontal(left: Radius.circular(50)),
       borderSide: BorderSide(
@@ -78,38 +83,72 @@ class _ProductListState extends State<ProductList> {
 
     final filteredProducts = getFilteredProducts();
 
+    final shoesCollectionText = Expanded(
+  flex: 1,
+  child: Padding(
+    padding: const EdgeInsets.all(20.0),
+    child: Text(
+      'Shoes\nCollection',
+      style: Theme.of(context).textTheme.titleLarge,
+    ),
+  ),
+);
+
+const searchField = Expanded(
+  flex: 1,
+  child: TextField(
+    decoration: InputDecoration(
+      hintText: 'Search',
+      prefixIcon: Icon(Icons.search),
+      border: border,
+      enabledBorder: border,
+      focusedBorder: border,
+    ),
+  ),
+);
+
+final addProductButton = Expanded(
+  flex: 1,
+  child: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 50.0),
+    child: TextButton(
+      onPressed: () {
+        Navigator.pushNamed(context, 'addproduct');
+      },
+      child: const Text('Add Product'),
+    ),
+  ),
+);
+
     return SafeArea(
       child: Column(
         children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  'Shoes\nCollection',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              const SizedBox(
-                width: 500, 
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    prefixIcon: Icon(Icons.search),
-                    border: border,
-                    enabledBorder: border,
-                    focusedBorder: border,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                Navigator.pushNamed(context,'addproduct');
-              },
-              child: const Text('Add Product'), 
-              ),
-            ],
-          ),
+          isMobile
+      ? Column(
+          children: [
+            Row(
+              children: [
+                shoesCollectionText, // First widget on one row
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const SizedBox(width: 20),
+                searchField,
+                addProductButton,
+              ],
+            ),
+          ],
+        )
+      : Row(
+          children: [
+            shoesCollectionText,
+            searchField,
+            addProductButton,
+          ],
+        ),
+          
           SizedBox(
             height: 120,
             child: ListView.builder(
@@ -174,6 +213,7 @@ class _ProductListState extends State<ProductList> {
                                 );
                               },
                               child: ProductCard(
+                                id:product['_id'] as String,
                                 title: product['title'] as String,
                                 price: product['price'] != null
                                     ? product['price'].toDouble()
@@ -203,6 +243,7 @@ class _ProductListState extends State<ProductList> {
                                 );
                               },
                               child: ProductCard(
+                                id: product['_id'] as String,
                                 title: product['title'] as String,
                                 price: product['price'] != null
                                     ? product['price'].toDouble()

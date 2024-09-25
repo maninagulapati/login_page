@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
+  final String id;
   final String title;
   final double price;
   final String image;
   final Color backgroundColor;
   const ProductCard({
     super.key,
+    required this.id,
     required this.title,
     required this.price,
     required this.image,

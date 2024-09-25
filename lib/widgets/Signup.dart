@@ -40,16 +40,19 @@ class _SignupCardState extends State<SignupCard> {
         if (response.statusCode == 201) {
           // Handle successful signup
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: Duration(milliseconds: 1000),
             content: Text('User registered successfully'),
           ));
         } else {
           // Handle error response
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: Duration(milliseconds: 1000),
             content: Text('Signup failed: ${response.body}'),
           ));
         }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: Duration(milliseconds: 1000),
           content: Text('An error occurred: $error'),
         ));
       } finally {

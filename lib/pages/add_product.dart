@@ -41,7 +41,9 @@ class __AddProductPageState extends State<AddProductPage> {
   Future<void> _uploadProduct() async{
     if(_imageData==null || _titleController.text.isEmpty|| _priceController.text.isEmpty){
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill all fields and select an image'),),
+        SnackBar(
+          duration: Duration(milliseconds: 1000),
+          content: Text('Please fill all fields and select an image'),),
       );
       return;
     }
@@ -66,18 +68,24 @@ class __AddProductPageState extends State<AddProductPage> {
 
     if(response.statusCode == 200){
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Product added successfully')),
+        SnackBar(
+          duration: Duration(milliseconds: 1000),
+          content: Text('Product added successfully')),
       );
     }
     else{
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${response.body}')),
+        SnackBar(
+          duration: Duration(milliseconds: 1000),
+          content: Text('Error: ${response.body}')),
       );
     }
   }
   catch(e){
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error while uploading product: $e'),),
+      SnackBar(
+        duration: Duration(milliseconds: 1000),
+        content: Text('Error while uploading product: $e'),),
     );
   }
 

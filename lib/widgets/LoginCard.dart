@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decode/jwt_decode.dart';
+
 
 final storage=FlutterSecureStorage();
 
@@ -45,17 +47,21 @@ class _LoginCardState extends State<LoginCard> {
       final responseBody = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
+        String token=responseBody['token'];
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', responseBody['token']);
-        // await storage.write(key: 'token', value: responseBody['token']);
+        await prefs.setString('token', token);
+        await storage.write(key: 'token', value: token);
+        Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
+        await prefs.setString('userId', decodedToken['id']);
+        await prefs.setString('username', decodedToken['username']);
+        await prefs.setString('email', decodedToken['email']);
+
         Navigator.pushNamed(context, 'home');
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => AddProductPage()),
-        // );
         
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(responseBody['message'])));
+            .showSnackBar(SnackBar(
+              duration: Duration(milliseconds: 1000),
+              content: Text(responseBody['message'])));
       } else {
         setState(() {
           _errorMessage = responseBody['message'];
