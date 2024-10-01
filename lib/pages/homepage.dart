@@ -13,16 +13,53 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentPage = 0;
+  bool isBannerVisible = true;
 
   List<Widget> pages = [const ProductList(), CartPage()];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: currentPage,
-        children: pages,
-      ),
+   return Scaffold(
+    body: Stack(
+      children: [
+        IndexedStack(
+          index: currentPage,
+          children: pages,
+        ),
+        if (isBannerVisible)
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            color: Colors.blueAccent, // Background color
+            padding: EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Limited Time Offer: 20% Off!",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Action when button is pressed
+                  },
+                  child: const Text("Shop Now"),
+                ),
+                IconButton(onPressed: () {setState(() {
+                  isBannerVisible=false;
+                });}, icon: const Icon(Icons.close))
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentPage,
         onTap: (value) {

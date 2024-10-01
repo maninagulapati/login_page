@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_page/pages/add_product.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:login_page/pages/product_details_page.dart';
 import 'package:login_page/widgets/product_card.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +18,7 @@ class _ProductListState extends State<ProductList> {
   late String selectedFilter = filters[0];
   List<Map<String, dynamic>> products = []; // Store fetched products
   bool isLoading = true;
+  String searchQuery='';
 
   @override
   void initState() {
@@ -58,21 +59,22 @@ class _ProductListState extends State<ProductList> {
     }
   }
 
-  List<Map<String, dynamic>> getFilteredProducts() {
-    if (selectedFilter == 'All') {
-      return products;
-    }
-    return products
-        .where((product) => product['company'] == selectedFilter)
-        .toList();
+   List<Map<String, dynamic>> getFilteredProducts() {
+    return products.where((product) {
+      final matchesFilter =
+          selectedFilter == 'All' || product['company'] == selectedFilter;
+      final matchesSearch =
+          product['title'].toLowerCase().contains(searchQuery.toLowerCase());
+
+      return matchesFilter && matchesSearch;
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
      final screenWidth = MediaQuery.of(context).size.width;
      final isMobile=screenWidth<650;
-
-    
+     final filteredProducts=getFilteredProducts();
 
     const border = OutlineInputBorder(
       borderRadius: BorderRadius.horizontal(left: Radius.circular(50)),
@@ -80,8 +82,6 @@ class _ProductListState extends State<ProductList> {
         color: Color.fromRGBO(225, 225, 225, 1),
       ),
     );
-
-    final filteredProducts = getFilteredProducts();
 
     final shoesCollectionText = Expanded(
   flex: 1,
@@ -94,18 +94,24 @@ class _ProductListState extends State<ProductList> {
   ),
 );
 
-const searchField = Expanded(
-  flex: 1,
-  child: TextField(
-    decoration: InputDecoration(
-      hintText: 'Search',
-      prefixIcon: Icon(Icons.search),
-      border: border,
-      enabledBorder: border,
-      focusedBorder: border,
-    ),
-  ),
-);
+var searchField = Expanded(
+      flex: 1,
+      child: TextField(
+        onChanged: (value) {
+          setState(() {
+            searchQuery = value; // Update search query
+          });
+        },
+        decoration: const InputDecoration(
+          hintText: 'Search',
+          prefixIcon: Icon(Icons.search),
+          border: border,
+          enabledBorder: border,
+          focusedBorder: border,
+        ),
+      ),
+    );
+
 
 final addProductButton = Expanded(
   flex: 1,
@@ -119,6 +125,18 @@ final addProductButton = Expanded(
     ),
   ),
 );
+
+final logoutButton = Expanded(
+      child: TextButton(
+          onPressed: () async {
+            final storage = FlutterSecureStorage();
+
+            await storage.delete(key: 'token');
+
+            Navigator.pushNamed(context, 'logout');
+          },
+          child: const Text('Logout')),
+    );
 
     return SafeArea(
       child: Column(
@@ -146,6 +164,7 @@ final addProductButton = Expanded(
             shoesCollectionText,
             searchField,
             addProductButton,
+            logoutButton,
           ],
         ),
           
