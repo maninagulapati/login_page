@@ -12,6 +12,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  Map<int, int?> selectedQuantities = {}; 
   int? selectedQuantity;
   @override
   void initState() {
@@ -82,7 +83,7 @@ class _CartPageState extends State<CartPage> {
                           width: 1), // Border style
                     ),
                     child: TextFormField(
-                      initialValue: selectedQuantity?.toString() ??
+                      initialValue: selectedQuantities[index]?.toString() ??
                           product.quantity.toString(),
                       keyboardType: TextInputType.number, // Number input type
                       decoration: const InputDecoration(
@@ -100,15 +101,15 @@ class _CartPageState extends State<CartPage> {
                         fontSize: 16, // Adjust text size
                       ),
                       onChanged: (value) {
+                        final newQuantity = int.tryParse(value);
                         setState(() {
-                          selectedQuantity = int.tryParse(
-                              value); // Update selectedQuantity on change
+                          selectedQuantities[index] = newQuantity ;// Update selectedQuantity on change
                         });
-                        if(selectedQuantity!=null){
+                        if(newQuantity!=null){
                           // Update quantity in the cart
                           Provider.of<CartProvider>(context, listen: false)
                              .updateCart(cartProvider.cart!.userId, product.id,
-                                              selectedQuantity!);
+                                              newQuantity);
                         }
                       },
                     ),
