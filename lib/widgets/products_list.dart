@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:login_page/pages/product_details_page.dart';
+import 'package:login_page/services/api_service.dart';
 import 'package:login_page/widgets/product_card.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ProductList extends StatefulWidget {
   const ProductList({super.key});
+  
 
   @override
   State<ProductList> createState() => _ProductListState();
@@ -19,6 +21,7 @@ class _ProductListState extends State<ProductList> {
   List<Map<String, dynamic>> products = []; // Store fetched products
   bool isLoading = true;
   String searchQuery='';
+  final apiService= ApiService();
 
   @override
   void initState() {
@@ -29,14 +32,11 @@ class _ProductListState extends State<ProductList> {
 
   Future<void> _fetchProducts() async {
     try {
-      final response = await http.get(
-        Uri.parse('http://localhost:3000/api/products/listproducts'),
-        headers: {'Content-Type': 'application/json'},
-      );
+      final response = await apiService.getRequest('http://localhost:3000/api/products/listproducts');
 
       if (response.statusCode == 200) {
         // Decode and set products
-        final Map<String, dynamic> responseData = json.decode(response.body);
+        final Map<String, dynamic> responseData = response.data;
         final List<dynamic> data = responseData['data'];
 
         setState(() {
