@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_page/models/cart_model.dart';
-import 'package:login_page/models/product_details.dart';
+import 'package:login_page/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 
@@ -12,6 +11,7 @@ class CartProvider with ChangeNotifier {
 
   Cart? get cart => _cart;
   bool get isLoading => _isLoading;
+  final apiService= ApiService();
 
   // Fetch the cart data
   Future<void> fetchCart() async {
@@ -21,20 +21,15 @@ class CartProvider with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
 
-    final response = await http.get(
-        Uri.parse('http://localhost:3000/api/cart/listcart?userId=$userId'));
+    final response = await apiService.getRequest('/api/cart/listcart?userId=$userId');
+
 
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
+      final jsonResponse = response.data;
+      
 
       if (jsonResponse['data'] != null) {
         Cart cart = Cart.fromJson(jsonResponse['data']);
-
-        for (var cartItem in cart.products) {
-          // Fetch product details for each cart item
-          cartItem.productDetails =
-              await fetchProductDetails(cartItem.productId);
-        }
 
         _cart = cart;
         _isLoading = false;
@@ -47,30 +42,15 @@ class CartProvider with ChangeNotifier {
     }
   }
 
-  Future<Product> fetchProductDetails(String productId) async {
-    final response = await http.get(Uri.parse(
-        'http://localhost:3000/api/products/getproduct?productId=$productId'));
-
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      return Product.fromJson(jsonResponse['data']);
-    } else {
-      throw Exception('Failed to fetch product details');
-    }
-  }
+  
 
   Future<void> deleteFromCart(cartid,productid) async{
     
     
-      final response= await http.delete(
-        Uri.parse('http://localhost:3000/api/cart/deletecartitem?cartId=$cartid&cartproductId=$productid'),
-        headers: {
-          'Authorization': 'Bearer YOUR_TOKEN',
-          'Content-Type': 'application/json',
-        },
-      );
+      final response= await apiService.deleteRequest('/api/cart/deletecartitem?cartId=$cartid&cartproductId=$productid',);
       if (response.statusCode == 200) {
-        cart?.products.removeWhere((item) => item.productId == productid);
+        _cart?.products.removeWhere((item) => item.productId == productid);
+        await fetchCart();
         notifyListeners();
       } else {
         throw Exception('Failed to delete product from cart');
@@ -78,4 +58,26 @@ class CartProvider with ChangeNotifier {
     
    
   }
+
+  Future <void> updateCart(userid,cartproductid,quantity) async{
+    final response = await apiService.patchRequest('/api/cart/addcart',
+    {
+      "userId":userid,
+      "cartProductId":cartproductid,
+      "quantity":quantity,
+    }
+    );
+        
+        if(response.statusCode==200){
+          await fetchCart();
+          notifyListeners();
+        }
+        else{
+          throw Exception('Failed to update cart item');
+        }
+
+  }
 }
+
+
+

@@ -35,7 +35,6 @@ class _LoginCardState extends State<LoginCard> {
       final response = await http.post(
         Uri.parse('http://localhost:3000/api/users/login'),
         headers: {
-          'Authorization': 'Bearer YOUR_TOKEN',
           'Content-Type': 'application/json',
         },
         body: jsonEncode(<String, String>{

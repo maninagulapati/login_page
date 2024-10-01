@@ -1,4 +1,3 @@
-import 'package:login_page/models/product_details.dart';
 
 class CartItem {
   final String id;
@@ -6,7 +5,8 @@ class CartItem {
   final int quantity;
   final int size;
   final int totalproductprice;
-  Product? productDetails;
+  final String image;
+  final String title;
 
   CartItem({
     required this.id,
@@ -14,6 +14,8 @@ class CartItem {
     required this.quantity,
     required this.size,
     required this.totalproductprice,
+    required this.image,
+    required this.title,
   });
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,8 @@ class CartItem {
       quantity: json['quantity'],
       size: json['size'],
       totalproductprice:json['totalproductprice'],
+      image: json['image'],
+      title: json['title'],
     );
   }
 }

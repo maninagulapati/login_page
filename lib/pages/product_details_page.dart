@@ -1,9 +1,8 @@
 import 'dart:convert'; // For base64 decoding
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:login_page/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:login_page/providers/cart_provider.dart';
-import 'package:provider/provider.dart';
+
 
 class ProductDetailsPage extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -23,34 +22,35 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   String _errorMessage = '';
 
   Future<void> addToCart() async {
+    
     setState(() {
       _isLoading = true;
       _errorMessage = '';
     });
 
+    final apiService= ApiService();
+
     try {
       final prefs = await SharedPreferences.getInstance();
       String? userId = prefs.getString('userId');
-      final response = await http.post(
-        Uri.parse('http://localhost:3000/api/cart/addcart'),
-        headers: {
-          'Authorization': 'Bearer YOUR_TOKEN',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(<String, String>{
+      final response = await apiService.postRequest('/api/cart/addcart',
+        {
           'userId': userId.toString(),
           'ProductId': widget.product['_id'],
           'quantity': selectedQuantity.toString(),
           'size': selectedSize.toString(),
-        }),
+        }
+        
       );
 
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (response!=null && response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
             duration: Duration(milliseconds: 1000),
-            content: Text('Item added to cart')));
+            content: Text('Item added to cart')
+          ));
       } else {
-        _errorMessage = 'Failed to add item to cart: ${response.body}';
+        _errorMessage = 'Failed to add item to cart';
       }
     } on Exception catch (e) {
       _errorMessage = 'Failed to add item to cart: $e';
@@ -102,61 +102,76 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 ),
                 const SizedBox(height: 10),
                 // List of available sizes
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 50,
-                      width: 400,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount:
-                            (widget.product['sizes'] as List<dynamic>).length,
-                        itemBuilder: (context, index) {
-                          final size =
-                              (widget.product['sizes'] as List<dynamic>)[index];
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedSize =
-                                      int.parse(size); // Parse size to int
-                                });
-                              },
-                              child: Chip(
-                                label: Text(size.toString()),
-                                backgroundColor: selectedSize == int.parse(size)
-                                    ? Theme.of(context).colorScheme.primary
-                                    : null,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 162,
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<int>(
-                          items: List.generate(10, (index) => index + 1)
-                              .map<DropdownMenuItem<int>>((quantity) {
-                            return DropdownMenuItem<int>(
-                              value: quantity,
-                              child: Text(quantity
-                                  .toString()), // Display quantity as text
-                            );
-                          }).toList(),
-                          onChanged: (value) => setState(() {
-                            selectedQuantity = value; // Store selected quantity
-                          }),
-                          value:
-                              selectedQuantity, // Set the currently selected quantity
-                          hint: Text("Select quantity"), // Optional hint text
-                        ),
-                      ),
-                    ),
-                  ],
+                Wrap(
+  alignment: WrapAlignment.start,
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: 8.0, // Spacing between the Chip and Dropdown
+  runSpacing: 8.0, // Spacing between rows when content wraps
+  children: [
+    // Wrap for Sizes (Chips)
+    Wrap(
+      spacing: 8.0, // Spacing between chips
+      children: (widget.product['sizes'] as List<dynamic>)
+          .map<Widget>((size) => GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedSize = int.parse(size); // Parse size to int
+                  });
+                },
+                child: Chip(
+                  label: Text(size.toString()),
+                  backgroundColor: selectedSize == int.parse(size)
+                      ? Theme.of(context).colorScheme.primary
+                      : null,
                 ),
+              ))
+          .toList(),
+    ),
+    // Dropdown for Quantity
+    Container(
+      height: 35,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white, // Background color for the dropdown
+        borderRadius: BorderRadius.circular(8), // Rounded corners
+        border: Border.all(
+          color: Colors.grey.shade400,
+          width: 1,
+        ), // Border styling
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<int>(
+          isExpanded: false, // Expand only to fit the selected item
+          items: List.generate(10, (index) => index + 1)
+              .map<DropdownMenuItem<int>>((quantity) {
+            return DropdownMenuItem<int>(
+              value: quantity,
+              child: Text(
+                quantity.toString(),
+                style: TextStyle(fontSize: 16),
+              ),
+            );
+          }).toList(),
+          onChanged: (value) => setState(() {
+            selectedQuantity = value; // Update the selected value
+          }),
+          value: selectedQuantity,
+          hint: const Text(
+            "Select quantity",
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.grey,
+          ), // Custom dropdown icon
+          dropdownColor: Colors.white,
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    ),
+  ],
+)
+,
                 // Add to Cart button
                 SizedBox(height: 16.0),
                 if (_isLoading)

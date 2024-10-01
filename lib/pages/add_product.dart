@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:login_page/services/storage_service.dart';
+
+
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
@@ -52,11 +54,16 @@ class __AddProductPageState extends State<AddProductPage> {
     //Convert image to base64 string 
     // String base64Image= base64Encode(_imageData);
     var sizes = _sizesController.text.split(',').map((size) => size.trim()).toList();
+    final storageService = StorageService();
+    String? token = await storageService.readToken();
 
-
+    
     final response=await http.post(
       Uri.parse('http://localhost:3000/api/products/addproduct'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+        },
       body: jsonEncode({
           'title': _titleController.text,
           'price': double.parse(_priceController.text),
