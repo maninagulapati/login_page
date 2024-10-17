@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:login_page/pages/cart_page.dart';
+import 'package:login_page/pages/checkout.dart';
 import 'package:login_page/widgets/Signup.dart';
 import 'package:login_page/pages/add_product.dart';
 import 'package:login_page/widgets/LoginCard.dart';
@@ -23,7 +25,9 @@ class MyApp extends StatelessWidget {
         routes: {
           'home': (context) => HomePage(),
           'addproduct':(context)=> AddProductPage(),
-          'logout':(context)=>LoginCard()
+          'logout':(context)=>LoginCard(),
+          'cart':(context)=>CartPage(),
+          'checkout':(context)=>CheckoutPage()
         },
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
